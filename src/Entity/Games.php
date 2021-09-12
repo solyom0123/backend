@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\GamesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=GamesRepository::class)
+ * @ApiResource()
+
  */
 class Games
 {
@@ -21,7 +24,9 @@ class Games
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $description;
 
     /**
