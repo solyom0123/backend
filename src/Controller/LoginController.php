@@ -25,30 +25,39 @@ class LoginController extends AbstractController
     #[Route('/login', name: 'login',methods:['POST'])]
     public function login(Request $request,UserRepository $userRepository): Response
     {
-        $jsonObj=json_decode($request->getContent());
-        $userName = $jsonObj->{"username"};
-
-        //$userName=$request->get("username");
+        $userName = $request->get("username");
         $user=$userRepository->findOneBy(["username"=>$userName]);
         $answer=Response::HTTP_OK;
         $this->logger->info($request->getMethod());
-        //var_dump($request->getContent());
         if(!$user){
             $answer=Response::HTTP_NOT_FOUND;
         }else{
-           // $password=$request->get("password");
-            $password = $jsonObj->{"password"};
+            $password = $request->get("password");
             if($password!=$user->getPassword()){
                 $answer=Response::HTTP_FORBIDDEN;
             }
         }
-        //var_dump($user);
-        //var_dump(json_encode((array)$user));
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
         $jsonContent = $serializer->serialize($user, 'json');
-        //var_dump($jsonContent);
+        return new Response($jsonContent,$answer,["content-type"=>"application/json"]);
+    }
+
+    #[Route('/logout', name: 'logout',methods:['POST'])]
+    public function logout(Request $request,UserRepository $userRepository): Response
+    {
+        $id = $request->get("id");
+         $user=$userRepository->find($id);
+        $answer=Response::HTTP_OK;
+        $this->logger->info($request->getMethod());
+        if(!$user){
+            $answer=Response::HTTP_NOT_FOUND;
+        }
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+        $jsonContent = $serializer->serialize($user, 'json');
         return new Response($jsonContent,$answer,["content-type"=>"application/json"]);
     }
 }
