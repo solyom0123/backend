@@ -30,17 +30,17 @@ class Games
     private $description;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="text")
      */
     private $jsCode;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="text")
      */
     private $htmlCode;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="text")
      */
     private $cssCode;
 

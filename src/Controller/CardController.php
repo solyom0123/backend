@@ -31,10 +31,10 @@ class CardController extends AbstractController
         $subjects=$subjectRepository->findAll();
         $answer=Response::HTTP_OK;
         $this->logger->info($request->getMethod());
+        $menus=[];
         if(!$subjects){
-            $answer=Response::HTTP_NOT_FOUND;
+            //$answer=Response::HTTP_NOT_FOUND;
         }else{
-            $menus=[];
             foreach ($subjects as $subject){
                 $menu=["subject"=>$subject->getName(),'tags'=>[]];
                 foreach ($subject->getClassrooms() as $classroom ){
@@ -58,6 +58,7 @@ class CardController extends AbstractController
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
         $jsonContent = $serializer->serialize($menus, 'json');
+        //$jsonContent = $serializer->serialize($menu, 'json');
         return new Response($jsonContent,$answer,["content-type"=>"application/json"]);
     }
     #[Route('/cards/getAllBySubjectAndTag', name: 'getAllBySubjectAndTag',methods:['POST'])]
@@ -76,8 +77,8 @@ class CardController extends AbstractController
                 foreach ($classroom->getCards() as $cards){
                     $tags=explode("_",$cards->getTags());
                     if(in_array($tag,$tags)){
-                            array_push($foundCards,$cards);
-                        }
+                        array_push($foundCards,$cards);
+                    }
                 }
             }
 
